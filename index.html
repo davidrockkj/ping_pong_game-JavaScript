@@ -88,14 +88,14 @@
                     canvasCtx.fillRect(this.x, this.y, this.w, this.h)
                 
                     this._move()
-                }
+                },
             }
 
 
             // Criando o objeto RAQUETE DIREITA
             const rightPaddle = {
                 x: field.w - line.w - gapX,
-                y: 100,
+                y: 0,
                 w: line.w,
                 h: 200,
                 _move: function(){
@@ -108,14 +108,20 @@
                     canvasCtx.fillRect(this.x, this.y, this.w, this.h)
 
                     this._move()
-                }
+                },
             }
 
 
             // Criando o objeto PLACAR
             const score = {
-                human: 1,
-                computer: 2,
+                human: 0,
+                computer: 0,
+                increaseHuman: function() {
+                    this.human++
+                },
+                increaseComputer: function() {
+                    this.computer++
+                },
                 draw: function() {
                     // Desenhando o placar ------------------------------
                     canvasCtx.font = "bold 150px Arial"
@@ -143,6 +149,22 @@
                 // 1 vai para baixo -1 vai para cima
                 directionY: 1,
                 _calcPosition: function() {
+                    // verifica se o jogar 1 fez ponto (x > larguda do campo)
+                    if (this.x > field.w - this.r - rightPaddle.w - gapX) {
+                        // se a raquete direita está na posição Y da bola
+                        if (this.y + this.r > rightPaddle.y &&
+                            this.y - this.r < rightPaddle.y + rightPaddle.h
+                        )   {
+                                // rebate a bola invertendo o sinal de X
+                                this._reverseX()
+                            } else {
+                                // pontuar o jogador 1
+                                score.increaseHuman()
+                                this._pointUp()
+                            }
+                    }
+
+
                     // verifica as laterias superior e inferior do campo
                     if(
                         (this.y - this.r < 0 && this.directionY < 0) ||
@@ -159,7 +181,11 @@
                     this.directionY *= -1
                 },
                 _reverseX: function() {
-                    this.directionY *= -1
+                    this.directionX *= -1
+                },
+                _pointUp: function() {
+                    this.x = field.w / 2
+                    this.y = field.h / 2
                 },
                 _move: function() {
                     this.x += this.directionX * this.speed
