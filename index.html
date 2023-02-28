@@ -98,8 +98,16 @@
                 y: 0,
                 w: line.w,
                 h: 200,
+                speed: 5,
                 _move: function(){
-                    this.y = ball.y
+                    if (this.y + this.h / 2 < ball.y + ball.r) {
+                        this.y += this.speed
+                    } else {
+                        this.y -= this.speed
+                    }
+                },
+                speedUp: function() {
+                    this.speed += .75
                 },
                 draw: function() {
                     canvasCtx.fillStyle = "#fff"
@@ -204,6 +212,7 @@
                 _pointUp: function() {
                     if (this.speed < 20) {
                         this._speedUp()
+                        rightPaddle.speedUp()
                         console.log(this.speed)
                     }
 
