@@ -134,13 +134,36 @@
 
             // Criando o objeto BOLA
             const ball = {
-                x: 300,
-                y: 200,
+                x: 0,
+                y: 0,
                 r: 20,
-                speed: 3,
+                speed: 5,
+                // 1 vai para direita -1 vai para esquerda
+                directionX: 1,
+                // 1 vai para baixo -1 vai para cima
+                directionY: 1,
+                _calcPosition: function() {
+                    // verifica as laterias superior e inferior do campo
+                    if(
+                        (this.y - this.r < 0 && this.directionY < 0) ||
+                        (this.y > field.h - this.r && this.directionY > 0)
+                    ) {
+                        // rebate a bola invertendo o sinal do eixo Y
+                        this._reverseY()
+                    }
+                },
+                // Transformar o 1 para -1
+                _reverseY: function() {
+                    // 1 * -1 = -1
+                    // -1 * -1 = 1
+                    this.directionY *= -1
+                },
+                _reverseX: function() {
+                    this.directionY *= -1
+                },
                 _move: function() {
-                    this.x +=1 * this.speed
-                    this.y +=1 * this.speed
+                    this.x += this.directionX * this.speed
+                    this.y += this.directionY * this.speed
                 },
 
 
@@ -161,6 +184,7 @@
 
                     // Colocar o _ quando chamar funções internas
                     this._move()
+                    this._calcPosition()
                 },
             }
 
