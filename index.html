@@ -25,6 +25,9 @@
             // Declarando variável da expessura da linha
             // const lineWidth = 15
 
+            // Criando o objeto MOUSE
+            const mouse = { x: 0, y: 0 }
+
             // Criando o primeiro objeto CAMPO
             const field = {
                 // Largura
@@ -70,14 +73,21 @@
             // Criando o objeto RAQUETE ESQUERDA
             const leftPaddle = {
                 x: gapX,
-                y: 100,
+                y: 0,
                 w: line.w,
                 h: 200,
+                _move: function() {
+                    // o Y recebe a posição Y do mouse
+                    // this.h / 2 deixa o cursor no meio da raquete
+                    this.y = mouse.y - this.h / 2
+                },
                 draw: function() {
                     canvasCtx.fillStyle = "#fff"
 
                     // Desenhando a Raquete Esquerda -------------------
                     canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+                
+                    this._move()
                 }
             }
 
@@ -189,6 +199,7 @@
                     window.oRequestAnimationFrame ||
                     window.msRequestAnimationFrame ||
                     function (callback) {
+                        // Executando a animação do DRAW 60 vezes por segundo
                         return window.setTimeout(callback, 1000 / 60)
                     }
                 )
@@ -201,8 +212,14 @@
 
             setup()
             main()
-            // Executando a animação do DRAW 60 vezes por segundo
-            // window.setInterval(draw, 1000 / 60)
+            
+            // CHamando o evento que escuta o MOUSE
+            canvasEl.addEventListener('mousemove', function (e) {
+                mouse.x = e.pageX
+                mouse.y = e.pageY
+
+                console.log(mouse)
+            })
 
     </script>
 </body>
