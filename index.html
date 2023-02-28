@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Ping-Pong</title>
+
+    <style>
+        * {
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        const canvasEl = document.querySelector("canvas"),
+            // Definindo um contexto 2D
+            canvasCtx = canvasEl.getContext("2d")
+            gapX = 10
+            
+            // Declarando variável da expessura da linha
+            // const lineWidth = 15
+
+            // Criando o primeiro objeto CAMPO
+            const field = {
+                // Largura
+                w: window.innerWidth,
+                // Altura
+                h: window.innerHeight,
+                draw: function() {
+                    // Definindo a cor do campo
+                    canvasCtx.fillStyle = "#286047"
+                    // fillStyle = tudo que vier na sequencia fica essa cor
+                    
+                    // Definindo o tamanho do retângulo
+                    canvasCtx.fillRect(0, 0, this.w, this.h)
+                }
+            }
+
+
+            // Criando o objeto LINHA
+            const line = {
+                w: 15,
+                h: field.h,
+                draw: function(){
+                    // Desenhando linha central ------------------------
+                    // Definindo a cor da linha
+                    canvasCtx.fillStyle = "#fff"
+                    
+                    // Definindo tamanho da linha central
+                    canvasCtx.fillRect (
+                        field.w / 2 - this.w / 2,
+                        // posição no eixo X
+                        0,
+                        // posição no eixo Y
+                        this.w,
+                        // Largura da linha central
+                        this.h
+                        // Altura da linha
+                        
+                    )
+                }
+            }
+
+
+            // Criando o objeto RAQUETE ESQUERDA
+            const leftPaddle = {
+                x: gapX,
+                y: 100,
+                w: line.w,
+                h: 200,
+                draw: function() {
+                    canvasCtx.fillStyle = "#fff"
+
+                    // Desenhando a Raquete Esquerda -------------------
+                    canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+                }
+            }
+
+
+            // Criando o objeto RAQUETE DIREITA
+            const rightPaddle = {
+                x: field.w - line.w - gapX,
+                y: 100,
+                w: line.w,
+                h: 200,
+                draw: function() {
+                    canvasCtx.fillStyle = "#fff"
+
+                    // Desenhando a Raquete Esquerda -------------------
+                    canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+                }
+            }
+
+
+            // Criando o objeto PLACAR
+            const score = {
+                human: 1,
+                computer: 2,
+                draw: function() {
+                    // Desenhando o placar ------------------------------
+                    canvasCtx.font = "bold 150px Arial"
+                    canvasCtx.textAlign = "center"
+                    canvasCtx.textBaseline = "top"
+                    canvasCtx.fillStyle = "#01341D"
+                    canvasCtx.fillText(this.human, field.w / 4, 50)
+                    canvasCtx.fillText(
+                        this.computer, 
+                        field.w / 4 + field.w / 2 ,
+                        50
+                    )
+                }
+            }
+
+
+            // Criando o objeto BOLA
+            const ball = {
+                x: 300,
+                y: 200,
+                r: 20,
+                speed: 3,
+                _move: function() {
+                    this.x +=1 * this.speed
+                    this.y +=1 * this.speed
+                },
+
+
+                draw: function() {
+                    canvasCtx.fillStyle = "#fff"
+
+                    // Desenhando a Bola --------------------------------
+                    canvasCtx.beginPath()
+                    canvasCtx.arc(this.x, this.y, this.r, 0 , 2 * Math.PI, false)
+                    canvasCtx.fill()
+                    // arc (x, y, r, 0, 0.0 * Math.PI, false)
+                    // x - posição no eixo X
+                    // y - posição no eixo y
+                    // r - raio da bola
+                    // onde o arco começa
+                    // onde o arco termina
+                    // sentido que vai andar ((anti)horário)
+
+                    // Colocar o _ quando chamar funções internas
+                    this._move()
+                },
+            }
+
+
+            function setup() {
+                // Pegando a largura máxima da tela
+                canvasEl.width = canvasCtx.width = field.w
+                // Pegando a altura máxima da tela
+                canvasEl.height = canvasCtx.height = field.h
+            }
+
+            // Desenhando o campo (gramado)
+            function draw() {
+                // Chamando o método do CAMPO
+                field.draw()
+
+                // Chamando o método da LINHA
+                line.draw()
+
+                // Chamando o método RAQUETE ESQUERDA
+                leftPaddle.draw()
+                
+                // Chamando o método RAQUETE DIREITA
+                rightPaddle.draw()
+
+                // Chamando o método PLACAR
+                score.draw()
+
+                // Chamando o método BOLA
+                ball.draw()
+
+            }
+
+            
+            // API para suavizar animação
+            window.animateFrame = (function(){
+                return (
+                    window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    window.oRequestAnimationFrame ||
+                    window.msRequestAnimationFrame ||
+                    function (callback) {
+                        return window.setTimeout(callback, 1000 / 60)
+                    }
+                )
+            })()
+
+            function main() {
+                animateFrame(main)
+                draw()
+            }
+
+            setup()
+            main()
+            // Executando a animação do DRAW 60 vezes por segundo
+            // window.setInterval(draw, 1000 / 60)
+
+    </script>
+</body>
+</html>
