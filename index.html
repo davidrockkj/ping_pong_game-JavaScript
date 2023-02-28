@@ -140,8 +140,8 @@
 
             // Criando o objeto BOLA
             const ball = {
-                x: 0,
-                y: 0,
+                x: field.w / 2,
+                y: field.h / 2,
                 r: 20,
                 speed: 5,
                 // 1 vai para direita -1 vai para esquerda
@@ -150,7 +150,7 @@
                 directionY: 1,
                 _calcPosition: function() {
                     // verifica se o jogar 1 fez ponto (x > larguda do campo)
-                    if (this.x > field.w - this.r - rightPaddle.w - gapX) {
+                    if (this.x >= field.w - this.r - rightPaddle.w - gapX) {
                         // se a raquete direita está na posição Y da bola
                         if (this.y + this.r > rightPaddle.y &&
                             this.y - this.r < rightPaddle.y + rightPaddle.h
@@ -164,6 +164,21 @@
                             }
                     }
 
+                    // verifica se o jogador 2 fez ponto (x < 0)
+                    if (this.x <= this.r  + leftPaddle.w - gapX) {
+                        // verifica se a raquete esquerda está na posição Y da bola
+                        if (
+                            this.y + this.r > leftPaddle.y &&
+                            this.y - this.r < leftPaddle.y + leftPaddle.h 
+                        ) {
+                            // rebate a bola invertendo o sinal de X
+                            this._reverseX()
+                        } else {
+                            // pontuar o jogador 2
+                            score.increaseComputer()
+                            this._pointUp()
+                        }
+                    }
 
                     // verifica as laterias superior e inferior do campo
                     if(
